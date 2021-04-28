@@ -61,6 +61,12 @@ package java.util;
  * @author Doug Lea
  * @param <E> the type of elements held in this collection
  */
+
+/**
+ * 简单实现了add, remove, element 方法，这三种方法根据offer， pool， peek 方法实现
+ * 但是具体实现方法是在具体的实现类中去实现
+ * @param <E>
+ */
 public abstract class AbstractQueue<E>
     extends AbstractCollection<E>
     implements Queue<E> {
@@ -91,6 +97,8 @@ public abstract class AbstractQueue<E>
      * @throws IllegalArgumentException if some property of this element
      *         prevents it from being added to this queue
      */
+    //add是调用offer方法进行增加的，如果是添加成功，则返回true
+    //如果队列已经满了，则抛异常IllegalStateException
     public boolean add(E e) {
         if (offer(e))
             return true;
@@ -108,6 +116,10 @@ public abstract class AbstractQueue<E>
      *
      * @return the head of this queue
      * @throws NoSuchElementException if this queue is empty
+     */
+    /**
+     * remove,如果队列是空，则抛异常， 否则删除头结点
+     * @return
      */
     public E remove() {
         E x = poll();
@@ -127,6 +139,10 @@ public abstract class AbstractQueue<E>
      *
      * @return the head of this queue
      * @throws NoSuchElementException if this queue is empty
+     */
+    /**
+     * 如果队列是空，则抛异常，否则，取出头结点
+     * @return
      */
     public E element() {
         E x = peek();

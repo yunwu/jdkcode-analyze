@@ -177,6 +177,12 @@ import java.util.Queue;
  * @author Doug Lea
  * @param <E> the type of elements held in this collection
  */
+
+/**
+ * 阻塞队列接口，
+ * 阻塞队列特点：
+ * @param <E>
+ */
 public interface BlockingQueue<E> extends Queue<E> {
     /**
      * Inserts the specified element into this queue if it is possible to do
@@ -229,6 +235,11 @@ public interface BlockingQueue<E> extends Queue<E> {
      * @throws IllegalArgumentException if some property of the specified
      *         element prevents it from being added to this queue
      */
+    /**
+     * 阻塞接口，当插入的时候，如果没有空间需要等待，具体实现逻辑看代码
+     * @param e
+     * @throws InterruptedException
+     */
     void put(E e) throws InterruptedException;
 
     /**
@@ -249,13 +260,21 @@ public interface BlockingQueue<E> extends Queue<E> {
      * @throws IllegalArgumentException if some property of the specified
      *         element prevents it from being added to this queue
      */
+    /**
+     * 插入，阻塞等待，并且有等待超时，当等待超时时，直接抛出异常
+     * @param e
+     * @param timeout
+     * @param unit
+     * @return
+     * @throws InterruptedException
+     */
     boolean offer(E e, long timeout, TimeUnit unit)
         throws InterruptedException;
 
     /**
      * Retrieves and removes the head of this queue, waiting if necessary
      * until an element becomes available.
-     *
+     *获取head， 并且当条件不符合时等待
      * @return the head of this queue
      * @throws InterruptedException if interrupted while waiting
      */
@@ -273,6 +292,7 @@ public interface BlockingQueue<E> extends Queue<E> {
      *         specified waiting time elapses before an element is available
      * @throws InterruptedException if interrupted while waiting
      */
+    //删除元素，并设定超时时间
     E poll(long timeout, TimeUnit unit)
         throws InterruptedException;
 
@@ -286,7 +306,7 @@ public interface BlockingQueue<E> extends Queue<E> {
      * an element will succeed by inspecting {@code remainingCapacity}
      * because it may be the case that another thread is about to
      * insert or remove an element.
-     *
+     * 队列剩余容量
      * @return the remaining capacity
      */
     int remainingCapacity();
@@ -298,10 +318,10 @@ public interface BlockingQueue<E> extends Queue<E> {
      * elements.
      * Returns {@code true} if this queue contained the specified element
      * (or equivalently, if this queue changed as a result of the call).
-     *
-     * @param o element to be removed from this queue, if present
-     * @return {@code true} if this queue changed as a result of the call
-     * @throws ClassCastException if the class of the specified element
+//     * 删除元素，无block属性？？？？
+//     * @param o element to be removed from this queue, if present
+//     * @return {@code true} if this queue changed as a result of the call
+//     * @throws ClassCastException if the class of the specified element
      *         is incompatible with this queue
      *         (<a href="../Collection.html#optional-restrictions">optional</a>)
      * @throws NullPointerException if the specified element is null
@@ -313,7 +333,7 @@ public interface BlockingQueue<E> extends Queue<E> {
      * Returns {@code true} if this queue contains the specified element.
      * More formally, returns {@code true} if and only if this queue contains
      * at least one element {@code e} such that {@code o.equals(e)}.
-     *
+     * 判断队列中是否包含某个元素
      * @param o object to be checked for containment in this queue
      * @return {@code true} if this queue contains the specified element
      * @throws ClassCastException if the class of the specified element
@@ -359,7 +379,8 @@ public interface BlockingQueue<E> extends Queue<E> {
      * {@code IllegalArgumentException}. Further, the behavior of
      * this operation is undefined if the specified collection is
      * modified while the operation is in progress.
-     *
+     *从队列中删除元素，并将元素加入到给定的集合中
+     * TODO maxElements， 这个参数的处理需要仔细重要一下
      * @param c the collection to transfer elements into
      * @param maxElements the maximum number of elements to transfer
      * @return the number of elements transferred
