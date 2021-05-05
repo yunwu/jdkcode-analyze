@@ -88,6 +88,7 @@ public class ThreadLocal<T> {
      * The next hash code to be given out. Updated atomically. Starts at
      * zero.
      */
+    //自增的计数器，具体作用再看 TODO
     private static AtomicInteger nextHashCode =
         new AtomicInteger();
 
@@ -137,11 +138,13 @@ public class ThreadLocal<T> {
      * @throws NullPointerException if the specified supplier is null
      * @since 1.8
      */
+    //初始化副本方式之一： 函数表达式
     public static <S> ThreadLocal<S> withInitial(Supplier<? extends S> supplier) {
         return new SuppliedThreadLocal<>(supplier);
     }
 
     /**
+     * 无参数构造器
      * Creates a thread local variable.
      * @see #withInitial(Supplier)
      */
@@ -173,7 +176,9 @@ public class ThreadLocal<T> {
     /**
      * Variant of set() to establish initialValue. Used instead
      * of set() in case user has overridden the set() method.
-     *
+     *给当前线程赋值
+     * 每个线程都会有一个ThreadLocalMap存储副本
+     * 每个ThreadLocal都会有一个
      * @return the initial value
      */
     private T setInitialValue() {
@@ -317,12 +322,14 @@ public class ThreadLocal<T> {
 
         /**
          * The initial capacity -- MUST be a power of two.
+         * table初始容量设置成16
          */
         private static final int INITIAL_CAPACITY = 16;
 
         /**
          * The table, resized as necessary.
-         * table.length MUST always be a power of two.
+         * table.length MUST always be a power of two
+         * 存储ThreadLocal数据的数组.
          */
         private Entry[] table;
 
@@ -338,6 +345,7 @@ public class ThreadLocal<T> {
 
         /**
          * Set the resize threshold to maintain at worst a 2/3 load factor.
+         * 设置扩容因子 67%
          */
         private void setThreshold(int len) {
             threshold = len * 2 / 3;

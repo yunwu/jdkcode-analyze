@@ -94,6 +94,8 @@ public class TreeSet<E> extends AbstractSet<E>
 {
     /**
      * The backing map.
+     * 存储数据的属性
+     *
      */
     private transient NavigableMap<E,Object> m;
 

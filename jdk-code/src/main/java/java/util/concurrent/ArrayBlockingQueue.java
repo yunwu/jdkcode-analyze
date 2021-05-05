@@ -91,15 +91,19 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
     private static final long serialVersionUID = -817911632652898426L;
 
     /** The queued items */
+    //用数组存储队列元素
     final Object[] items;
 
     /** items index for next take, poll, peek or remove */
+    //要被处理的next 的元素index， 初始化为0
     int takeIndex;
 
     /** items index for next put, offer, or add */
+    //要被添加的next的元素index
     int putIndex;
 
     /** Number of elements in the queue */
+    //队列中剩余未处理元素数量
     int count;
 
     /*
@@ -110,10 +114,14 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
     /** Main lock guarding all access */
     final ReentrantLock lock;
 
-    /** Condition for waiting takes */
+    /** Condition for waiting takes
+     * 队列补位空了，则通知等待take之后才能再次插入
+     * */
     private final Condition notEmpty;
 
-    /** Condition for waiting puts */
+    /** Condition for waiting puts
+     * 当
+     * */
     private final Condition notFull;
 
     /**
@@ -153,6 +161,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
     /**
      * Inserts element at current put position, advances, and signals.
      * Call only when holding lock.
+     * 入队操作，每次入队操作都会有lock
      */
     private void enqueue(E x) {
         // assert lock.getHoldCount() == 1;
@@ -162,6 +171,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
         if (++putIndex == items.length)
             putIndex = 0;
         count++;
+        //每次入队之后都能够通知消费者取数据
         notEmpty.signal();
     }
 
@@ -181,6 +191,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
         count--;
         if (itrs != null)
             itrs.elementDequeued();
+        //每次出队成功，都能够通知生产者在生产
         notFull.signal();
         return x;
     }
@@ -201,6 +212,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
             if (++takeIndex == items.length)
                 takeIndex = 0;
             count--;
+            //TODO itrs具体是做什么的需要好好看一下
             if (itrs != null)
                 itrs.elementDequeued();
         } else {
@@ -821,6 +833,7 @@ public class ArrayBlockingQueue<E> extends AbstractQueue<E>
 
         /**
          * Node in a linked list of weak iterator references.
+         * 采用虚引用，在GC时会被回收
          */
         private class Node extends WeakReference<Itr> {
             Node next;

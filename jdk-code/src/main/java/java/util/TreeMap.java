@@ -534,6 +534,7 @@ public class TreeMap<K,V>
      */
     public V put(K key, V value) {
         Entry<K,V> t = root;
+        //当map是空的时候，这时候插入的节点是root节点
         if (t == null) {
             compare(key, key); // type (and possibly null) check
 
@@ -546,6 +547,7 @@ public class TreeMap<K,V>
         Entry<K,V> parent;
         // split comparator and comparable paths
         Comparator<? super K> cpr = comparator;
+        //当root不为空并且，map有自己的排序规则，则按照排序规则找到parent节点循环查找
         if (cpr != null) {
             do {
                 parent = t;
@@ -559,6 +561,7 @@ public class TreeMap<K,V>
             } while (t != null);
         }
         else {
+            //如果排序规则为空，生成默认排序规则，以key值升序排序，找到parent节点
             if (key == null)
                 throw new NullPointerException();
             @SuppressWarnings("unchecked")
@@ -574,6 +577,7 @@ public class TreeMap<K,V>
                     return t.setValue(value);
             } while (t != null);
         }
+        //开始将key,value 包装成节点写到parent 节点下
         Entry<K,V> e = new Entry<>(key, value, parent);
         if (cmp < 0)
             parent.left = e;

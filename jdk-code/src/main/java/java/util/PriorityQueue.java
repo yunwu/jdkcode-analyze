@@ -79,6 +79,11 @@ import java.util.function.Consumer;
  * @author Josh Bloch, Doug Lea
  * @param <E> the type of elements held in this collection
  */
+
+/**
+ * 具有优先级的队列实现规则： 数组+comparator
+ * @param <E>
+ */
 public class PriorityQueue<E> extends AbstractQueue<E>
     implements java.io.Serializable {
 
@@ -94,6 +99,7 @@ public class PriorityQueue<E> extends AbstractQueue<E>
      * heap and each descendant d of n, n <= d.  The element with the
      * lowest value is in queue[0], assuming the queue is nonempty.
      */
+
     transient Object[] queue; // non-private to simplify nested class access
 
     /**
